@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
+
 const team = [];
 
 const validateEmail = (input) => {};
@@ -150,7 +151,7 @@ const addMember = async () => {
 };
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
-const getTeamInformation = async () => {
+const init = async () => {
   await addManager();
   while (true) {
     const res = await addMember();
@@ -163,8 +164,12 @@ const getTeamInformation = async () => {
       break;
     }
   }
+  fs.mkdir(OUTPUT_DIR, () => {
+    console.log("Output directory created successfully");
+  });
+  fs.writeFile(outputPath, render(team), (res) => {
+    console.log("File created successfully");
+  });
 };
-//
 
-getTeamInformation();
-console.log();
+init();
