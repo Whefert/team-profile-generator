@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-const teamMembers = [];
+const team = [];
 
 const validateEmail = (input) => {};
 
@@ -33,8 +33,14 @@ const managerQuestions = [
   {
     type: "input",
     name: "email",
-    message: "Email",
+    message: "Email: ",
     validate: EmailValidator.validate,
+  },
+  {
+    type: "input",
+    name: "officeNumber",
+    message: "Office number: ",
+    // validate: function () {},
   },
 ];
 
@@ -59,7 +65,7 @@ const engineerQuestions = [
   },
   {
     type: "input",
-    name: "githubUsername",
+    name: "github",
     message: "GitHub username: ",
     // validate: function () {},
   },
@@ -110,14 +116,21 @@ const addAnotherMember = [
   },
 ];
 
+const addManager = async () => {
+  const { name, id, email, officeNumber } = await inquirer.prompt(
+    managerQuestions
+  );
+  team.push(new Manager(name, id, email, officeNumber));
+};
+
 const addEngineer = async () => {
-  const engineer = await inquirer.prompt(engineerQuestions);
-  teamMembers.push(engineer);
+  const { name, id, email, github } = await inquirer.prompt(engineerQuestions);
+  team.push(new Engineer(name, id, email, github));
 };
 
 const addIntern = async () => {
-  const intern = await inquirer.prompt(internQuestions);
-  teamMembers.push(intern);
+  const { name, id, email, school } = await inquirer.prompt(internQuestions);
+  team.push(new Intern(name, id, email, school));
 };
 
 const addMember = async () => {
@@ -138,8 +151,7 @@ const addMember = async () => {
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 const getTeamInformation = async () => {
-  //   const manager = await inquirer.prompt(managerQuestions);
-  //   teamMembers.push(manager);
+  await addManager();
   while (true) {
     const res = await addMember();
     if (!res) {
@@ -155,3 +167,4 @@ const getTeamInformation = async () => {
 //
 
 getTeamInformation();
+console.log();
