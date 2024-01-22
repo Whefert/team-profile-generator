@@ -16,8 +16,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const team = [];
 
-const validateEmail = (input) => {};
-
 const managerQuestions = [
   {
     type: "input",
@@ -164,6 +162,8 @@ const init = async () => {
       break;
     }
   }
+
+  //   TODO: Check if directory exists first
   fs.mkdir(OUTPUT_DIR, () => {
     console.log("Output directory created successfully");
   });
