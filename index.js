@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import * as EmailValidator from "email-validator";
 import render from "./src/page-template.js";
 import * as RXJS from "rxjs";
+import { phone } from "phone";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,18 +17,26 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const team = [];
 
+const isNumber = (val) => {
+  return !isNaN(val);
+};
+
+const isValidPhoneNumber = (number) => {
+  const { isValid } = phone(number);
+  return isValid;
+};
+
 const managerQuestions = [
   {
     type: "input",
     name: "name",
     message: "Manager's name: ",
-    // validate: function () {},
   },
   {
-    type: "number",
+    type: "input",
     name: "id",
     message: "ID: ",
-    // validate: function () {},
+    validate: isNumber,
   },
   {
     type: "input",
@@ -38,8 +47,8 @@ const managerQuestions = [
   {
     type: "input",
     name: "officeNumber",
-    message: "Office number: ",
-    // validate: function () {},
+    message: "Office number e.g. +44 7911 123456: ",
+    validate: isValidPhoneNumber,
   },
 ];
 
@@ -48,13 +57,12 @@ const engineerQuestions = [
     type: "input",
     name: "name",
     message: "Engineer's Name: ",
-    // validate: function () {},
   },
   {
-    type: "number",
+    type: "input",
     name: "id",
     message: "ID: ",
-    // validate: function () {},
+    validate: isNumber,
   },
   {
     type: "input",
@@ -66,7 +74,6 @@ const engineerQuestions = [
     type: "input",
     name: "github",
     message: "GitHub username: ",
-    // validate: function () {},
   },
 ];
 
@@ -75,13 +82,12 @@ const internQuestions = [
     type: "input",
     name: "name",
     message: "Intern's Name: ",
-    // validate: function () {},
   },
   {
-    type: "number",
+    type: "input",
     name: "id",
     message: "ID: ",
-    // validate: function () {},
+    validate: isNumber,
   },
   {
     type: "input",
@@ -93,7 +99,6 @@ const internQuestions = [
     type: "input",
     name: "school",
     message: "School: ",
-    // validate: function () {},
   },
 ];
 
@@ -103,7 +108,6 @@ const addTeamMember = [
     name: "choice",
     message: "Add a new team member",
     choices: ["Add an engineer", "Add an intern", "Finish building the team"],
-    // validate: function () {},
   },
 ];
 
@@ -163,10 +167,12 @@ const init = async () => {
     }
   }
 
-  //   TODO: Check if directory exists first
-  fs.mkdir(OUTPUT_DIR, () => {
-    console.log("Output directory created successfully");
-  });
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdir(OUTPUT_DIR, () => {
+      console.log("Output directory created successfully");
+    });
+  }
+
   fs.writeFile(outputPath, render(team), (res) => {
     console.log("File created successfully");
   });
